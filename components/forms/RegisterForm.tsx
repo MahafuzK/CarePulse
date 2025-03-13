@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -32,12 +33,11 @@ const RegisterForm = ({ user }: { user: User }) => {
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
       ...PatientFormDefaultValues,
-      name: "",
-      email: "",
-      phone: "",
+      birthDate: new Date(),
+			identificationDocument: [],
+			gender: "male" as Gender,
     },
   });
-  console.log("error:", form.formState.errors);
 
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
@@ -57,9 +57,10 @@ const RegisterForm = ({ user }: { user: User }) => {
     }
 
     try {
+			
       const patientData = {
         ...values,
-        userid: user.$id,
+        userId: user.$id,
         birthDate: new Date(values.birthDate),
         identificationDocument: formData,
       };
